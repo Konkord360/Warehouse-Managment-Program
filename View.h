@@ -1,6 +1,31 @@
 #pragma once
-class communicationManagement {
 
+enum mainMenuEnum {
+	viewWarehousemanMenu = '1',
+	viewCustomerMenu = '2',
+	end = '3'
+};
+
+enum warehousemanEnum {
+	replenishReserve = '1',
+	checkStockOfProducts = '2',
+	reciveDelivery = '3',
+	cleanUpInWarehouse = '4',
+	checkExpirationDatesOfProducts = '5',
+	closeWarehousemanEnum = '6'
+};
+
+enum customerMenuEnum {
+	makeOrder = '1',
+	cancelOrder = '2',
+	closeCustomerMenu = '3'
+};
+
+class CommunicationManagement {
+	char userInput;
 public:
-	void viewMenu();
+	char getUserInput();
+    void viewMainMenu();
+	void viewWarehousemanMenu();
+	void viewCustomerMenu();
 };
