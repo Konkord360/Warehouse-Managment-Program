@@ -1,11 +1,14 @@
 #pragma once
 #include <iostream>
+#include <string>
 
 struct Product {
 	std::string productName;
 	std::string productType;
 	std::string productId;
 	std::string expirationDate;
+public:
+	Product& operator=(Product&& object);
 };
 
 class ProductList {
@@ -15,6 +18,7 @@ public:
 	void viewProducts();
 	void addProduct();
 	void removeProduct();
+	Product* getProductInfoFromUser();
 };
 
 class Shelf {

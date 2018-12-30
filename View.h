@@ -1,5 +1,6 @@
 #pragma once
-
+#include <iostream>
+#include "WarehouseSide.h"
 enum mainMenuEnum {
 	viewWarehousemanMenu = '1',
 	viewCustomerMenu = '2',
@@ -12,7 +13,9 @@ enum warehousemanEnum {
 	reciveDelivery = '3',
 	cleanUpInWarehouse = '4',
 	checkExpirationDatesOfProducts = '5',
-	closeWarehousemanEnum = '6'
+	addProduct = '6',
+	removeProduct = '7',
+	closeWarehousemanEnum = '8'
 };
 
 enum customerMenuEnum {
@@ -28,4 +31,6 @@ public:
     void viewMainMenu();
 	void viewWarehousemanMenu();
 	void viewCustomerMenu();
+	void handleWarehousemanMenuChoice();
+	void handleCustomerMenuChoice();
 };
