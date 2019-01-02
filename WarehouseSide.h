@@ -24,7 +24,8 @@ public:
 	void viewProducts();
 	void addProduct();
 	void addProduct(std::string productName);
-	void removeProduct();
+	void removeProduct(std::string productName);
+	void removeProduct(int index);
 	void setToNext();//
 	int getSize();
 	bool isNextElementAvailable();//

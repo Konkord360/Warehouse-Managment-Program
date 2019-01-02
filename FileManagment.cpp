@@ -12,6 +12,18 @@ void FileManager::write(ProductList listOfProductsToWriteToFile)
 	fileToWriteTo.close();
 }
 
+void FileManager::rewrite(ProductList listOfProductsToWriteToFile)
+{
+	std::ofstream fileToWriteTo(this->fileToWorkWith);
+	if (fileToWriteTo.is_open()) {
+		for (int i = 0; i < listOfProductsToWriteToFile.getSize(); i++) {
+			fileToWriteTo << listOfProductsToWriteToFile.getItem(i)->productName;
+			fileToWriteTo << std::endl;
+		}
+	}
+	fileToWriteTo.close();
+}
+
 ProductList* FileManager::read()
 {
 	ProductList* productList = new ProductList;

@@ -47,6 +47,37 @@ void ProductList::addProduct(std::string productName)
 	}
 }
 
+void ProductList::removeProduct(std::string productName)
+{
+	if (this->productList == nullptr)
+		std::cout << "Lista jest pusta" << std::endl;
+
+	else if (this->productList->productName == productName)
+	{
+		Product *temp = this->productList;
+		this->productList = this->productList->nextProduct;
+		delete temp;
+		this->size--;
+	}
+
+	else
+	{
+		Product *temp = this->productList;
+		Product *listHead = this->productList;
+
+		while (listHead->nextProduct->productName != productName && listHead->nextProduct != nullptr) {
+			listHead = listHead->nextProduct;
+		}
+		if (listHead->nextProduct->productName == productName) 
+		{
+			temp = listHead->nextProduct;
+			listHead->nextProduct = listHead->nextProduct->nextProduct;
+			delete temp;
+			this->size--;
+		}
+	}
+}
+
 void ProductList::setToNext()
 {
 	if(this->productList->nextProduct != nullptr)

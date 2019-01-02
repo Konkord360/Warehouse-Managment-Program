@@ -12,5 +12,6 @@ public:
 
 	ProductList* read();
 	void write(ProductList listOfProductsToWriteToFile);
+	void rewrite(ProductList listOfProductsToWriteToFile);
 	void setFileToWorkWith(std::string fileName);
 };

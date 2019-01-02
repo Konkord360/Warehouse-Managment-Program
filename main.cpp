@@ -2,11 +2,17 @@
 #include "View.h"
 #include "WarehouseSide.h"
 #include "FileManagment.h"
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#ifdef _DEBUG
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
 
 int main() {
 	CommunicationManagement communicationManager;
 	Warehouseman warehouseman;
-	ProductList listOfProductsAvailableInWarehouse, *listaTest = new ProductList;
+	ProductList *listOfProductsAvailableInWarehouse = new ProductList, *listaTest = new ProductList;
 	FileManager fileManager;
 	std::string produktTest;
 	while (communicationManager.getUserInput() != end) {
@@ -29,20 +35,22 @@ int main() {
 			case checkExpirationDatesOfProducts:
 				break;
 			case addProduct:
-				//listOfProductsAvailableInWarehouse.addProduct();
-				//listOfProductsAvailableInWarehouse.addProduct();
-				//listOfProductsAvailableInWarehouse.addProduct();
+				listOfProductsAvailableInWarehouse->addProduct();
 				fileManager.setFileToWorkWith("listOfProductsAvailableInWarehouse.txt");
-				fileManager.write(listOfProductsAvailableInWarehouse);
-				listaTest = fileManager.read();
-				//fileManager.write(listOfProductsAvailableInWarehouse);
+				fileManager.write(*listOfProductsAvailableInWarehouse);
 				break;
 			case removeProduct:
+				fileManager.setFileToWorkWith("listOfProductsAvailableInWarehouse.txt");
+				if (listOfProductsAvailableInWarehouse->getSize() == 0)
+					listOfProductsAvailableInWarehouse = fileManager.read();
+				listOfProductsAvailableInWarehouse->removeProduct("ser");
+				fileManager.rewrite(*listOfProductsAvailableInWarehouse);
 				break;
 			case closeWarehousemanEnum:
 				break;
+			default:
+				break;
 			}
-					
 			break;
 		case '2': communicationManager.viewCustomerMenu();
 			break;
@@ -50,5 +58,6 @@ int main() {
 			break;
 		}
 	}
+	_CrtDumpMemoryLeaks();
 	return 0;
 }
