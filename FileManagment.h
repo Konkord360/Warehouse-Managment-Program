@@ -1,8 +1,16 @@
 #pragma once
-class WorkWithFile {
-private:
+#include <iostream>
+#include <fstream>
+#include "WarehouseSide.h"
 
+class FileManager {
+private:
+	std::string fileToWorkWith;
 public:
-	void read();
-	void write();
+	FileManager(std::string fileName) : fileToWorkWith(fileName) {};
+	FileManager() : fileToWorkWith("") {};
+
+	ProductList* read();
+	void write(ProductList listOfProductsToWriteToFile);
+	void setFileToWorkWith(std::string fileName);
 };

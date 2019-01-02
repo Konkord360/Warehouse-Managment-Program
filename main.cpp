@@ -1,12 +1,14 @@
 #include <iostream>
 #include "View.h"
 #include "WarehouseSide.h"
+#include "FileManagment.h"
 
 int main() {
 	CommunicationManagement communicationManager;
 	Warehouseman warehouseman;
-	ProductList productList;
-
+	ProductList listOfProductsAvailableInWarehouse, *listaTest = new ProductList;
+	FileManager fileManager;
+	std::string produktTest;
 	while (communicationManager.getUserInput() != end) {
 		communicationManager.viewMainMenu();
 
@@ -27,7 +29,13 @@ int main() {
 			case checkExpirationDatesOfProducts:
 				break;
 			case addProduct:
-				productList.addProduct();
+				//listOfProductsAvailableInWarehouse.addProduct();
+				//listOfProductsAvailableInWarehouse.addProduct();
+				//listOfProductsAvailableInWarehouse.addProduct();
+				fileManager.setFileToWorkWith("listOfProductsAvailableInWarehouse.txt");
+				fileManager.write(listOfProductsAvailableInWarehouse);
+				listaTest = fileManager.read();
+				//fileManager.write(listOfProductsAvailableInWarehouse);
 				break;
 			case removeProduct:
 				break;
