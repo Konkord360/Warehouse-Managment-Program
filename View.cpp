@@ -62,3 +62,25 @@ void CommunicationManagement::handleWarehousemanMenuChoice()
 void CommunicationManagement::handleCustomerMenuChoice()
 {
 }
+
+void CommunicationManagement::viewWarehouseStock()
+{
+}
+
+void CommunicationManagement::displayList(ProductList & productList)
+{
+	if (productList.getSize() == 0)
+		std::cout << "Lista jest pusta" << std::endl;
+	else
+		std::cout << "Nazwa produktu: \t Typ produktu: \t ID produktu: \t Iloœc produktow w magazynie: \t Data waznosci:" << std::endl;
+		for (int i = 0; i < productList.getSize(); i++) {
+			std::cout << i << ". " << productList.getItem(i)->productName << "\t \t \t \t" << productList.getItem(i)->productType << "\t \t"
+				<< productList.getItem(i)->productId << "\t \t \t" << productList.getItem(i)->numberOfItemsInStock << "\t \t \t"
+				<< productList.getItem(i)->expirationDate << std::endl;
+		}
+}
+
+void CommunicationManagement::getInfoAboutOrder(ProductList & productList)
+{
+
+}

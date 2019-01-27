@@ -33,4 +33,7 @@ public:
 	void viewCustomerMenu();
 	void handleWarehousemanMenuChoice();
 	void handleCustomerMenuChoice();
+	void viewWarehouseStock();
+	void displayList(ProductList& productList);
+	void getInfoAboutOrder(ProductList& productList);
 };

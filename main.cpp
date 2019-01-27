@@ -2,21 +2,19 @@
 #include "View.h"
 #include "WarehouseSide.h"
 #include "FileManagment.h"
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-#ifdef _DEBUG
-#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
-#define new DEBUG_NEW
-#endif
+#include <vld.h>
+#include "Warehouseman.h"
 
 int main() {
 	CommunicationManagement communicationManager;
 	Warehouseman warehouseman;
-	ProductList *listOfProductsAvailableInWarehouse = new ProductList, *listaTest = new ProductList;
+	ProductList listOfProductsAvailableInWarehouse, listaTest;
 	FileManager fileManager;
 	std::string produktTest;
+	char choice;
 	while (communicationManager.getUserInput() != end) {
 		communicationManager.viewMainMenu();
+
 
 		switch (communicationManager.getUserInput())
 		{
@@ -25,26 +23,31 @@ int main() {
 
 			switch (communicationManager.getUserInput()) {
 			case replenishReserve:
+				warehouseman.replenishReserve();
 				break;
 			case checkStockOfProducts:
+				warehouseman.checkStockOfProducts();
 				break;
 			case reciveDelivery:
+				warehouseman.reciveDelivery();
 				break;
 			case cleanUpInWarehouse:
 				break;
 			case checkExpirationDatesOfProducts:
 				break;
 			case addProduct:
-				listOfProductsAvailableInWarehouse->addProduct();
 				fileManager.setFileToWorkWith("listOfProductsAvailableInWarehouse.txt");
-				fileManager.write(*listOfProductsAvailableInWarehouse);
+				listOfProductsAvailableInWarehouse.addProduct();
+				fileManager.write(listOfProductsAvailableInWarehouse);
+				listOfProductsAvailableInWarehouse.removeProduct(0);
 				break;
 			case removeProduct:
+				listOfProductsAvailableInWarehouse.clearList();
 				fileManager.setFileToWorkWith("listOfProductsAvailableInWarehouse.txt");
-				if (listOfProductsAvailableInWarehouse->getSize() == 0)
-					listOfProductsAvailableInWarehouse = fileManager.read();
-				listOfProductsAvailableInWarehouse->removeProduct("ser");
-				fileManager.rewrite(*listOfProductsAvailableInWarehouse);
+				//if (listOfProductsAvailableInWarehouse.getSize() == 0)
+					fileManager.read(listOfProductsAvailableInWarehouse);
+				listOfProductsAvailableInWarehouse.removeProduct("gruszka");
+				fileManager.rewrite(listOfProductsAvailableInWarehouse);
 				break;
 			case closeWarehousemanEnum:
 				break;
@@ -58,6 +61,6 @@ int main() {
 			break;
 		}
 	}
-	_CrtDumpMemoryLeaks();
+	listOfProductsAvailableInWarehouse.clearList();
 	return 0;
 }

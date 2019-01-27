@@ -10,8 +10,12 @@ public:
 	FileManager(std::string fileName) : fileToWorkWith(fileName) {};
 	FileManager() : fileToWorkWith("") {};
 
-	ProductList* read();
-	void write(ProductList listOfProductsToWriteToFile);
-	void rewrite(ProductList listOfProductsToWriteToFile);
+	void read(ProductList& productList);
+	void writeNamesOfProductsToFile(ProductList listOfProductsToWriteToFile);
+	void rewriteNamesOfProductsToFile(ProductList listOfProductsToWriteToFile);
+	void write(ProductList& listOfProductsToWriteToFile);
+	void writeOrderToFile();
+	void rewrite(ProductList& listOfProductsToWriteToFile);
 	void setFileToWorkWith(std::string fileName);
+	bool checkIfProductIsInOffer(Product& product);
 };
