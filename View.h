@@ -20,8 +20,9 @@ enum warehousemanEnum {
 
 enum customerMenuEnum {
 	makeOrder = '1',
-	cancelOrder = '2',
-	closeCustomerMenu = '3'
+	reciveOrder = '2',
+	cancelOrder = '3',
+	closeCustomerMenu = '4'
 };
 
 class CommunicationManagement {
@@ -35,5 +36,6 @@ public:
 	void handleCustomerMenuChoice();
 	void viewWarehouseStock();
 	void displayList(ProductList& productList);
+	void displayOrderedItems(ProductList& productList);
 	void getInfoAboutOrder(ProductList& productList);
 };

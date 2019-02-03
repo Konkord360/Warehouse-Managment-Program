@@ -7,11 +7,11 @@ void ProductList::addProduct()
 
 		this->size++;
 
-		if (this->productList == nullptr)
-			this->productList = newProduct;
+		if (this->head == nullptr)
+			this->head = newProduct;
 
 		else {
-			Product *listHead = this->productList;
+			Product *listHead = this->head;
 
 			while (listHead->nextProduct != nullptr)
 				listHead = listHead->nextProduct;
@@ -29,11 +29,11 @@ void ProductList::addProduct(std::string productName)
 	//Product *newProduct2 = newProduct;
 	this->size++;
 
-	if (this->productList == nullptr)
-		this->productList = newProduct;
+	if (this->head == nullptr)
+		this->head = newProduct;
 
 	else {
-		Product *listHead = this->productList;
+		Product *listHead = this->head;
 
 		while (listHead->nextProduct != nullptr)
 			listHead = listHead->nextProduct;
@@ -45,10 +45,10 @@ void ProductList::addProduct(std::string productName)
 
 void ProductList::addProduct(Product *product)
 {
-	if (this->productList == nullptr)
-		this->productList = product;
+	if (this->head == nullptr)
+		this->head = product;
 	else {
-		Product *listHead = this->productList;
+		Product *listHead = this->head;
 
 		while (listHead->nextProduct != nullptr)
 			listHead = listHead->nextProduct;
@@ -61,21 +61,21 @@ void ProductList::addProduct(Product *product)
 
 void ProductList::removeProduct(std::string productName)
 {
-	if (this->productList == nullptr)
+	if (this->head == nullptr)
 		std::cout << "Lista jest pusta" << std::endl;
 
-	else if (this->productList->productName == productName)
+	else if (this->head->productName == productName)
 	{
 		//usuwanie produktu z poczatku listy
-		delete productList;
-		this->productList = nullptr;
+		delete head;
+		this->head = nullptr;
 		this->size--;
 	}
 
 	else
 	{
-		Product *temp = this->productList;
-		Product *toBeDeleted = this->productList;
+		Product *temp = this->head;
+		Product *toBeDeleted = this->head;
 		//znalezienie produktu do usuniecia
 		while (temp->nextProduct != nullptr && temp->nextProduct->productName != productName) 
 			temp = temp->nextProduct;
@@ -103,7 +103,7 @@ void ProductList::removeProduct(std::string productName)
 
 void ProductList::removeProduct(int index)
 {
-	if (this->productList == nullptr)
+	if (this->head == nullptr)
 		std::cout << "Lista jest pusta" << std::endl;
 
 	else if (this->getSize() - 1 < index)
@@ -111,17 +111,17 @@ void ProductList::removeProduct(int index)
 
 	else if (index >= 0)
 	{
-		Product *temp = this->productList;
+		Product *temp = this->head;
 
 		if (index == 0) {
 			delete temp;
-			this->productList = nullptr;
+			this->head = nullptr;
 		}
 
 		else 
 		{
 			for (int i = 0; i < index; i++)
-				this->productList = this->productList->nextProduct;
+				this->head = this->head->nextProduct;
 
 			delete temp;
 		}
@@ -131,8 +131,8 @@ void ProductList::removeProduct(int index)
 
 void ProductList::setToNext()
 {
-	if(this->productList->nextProduct != nullptr)
-		this->productList = this->productList->nextProduct;
+	if(this->head->nextProduct != nullptr)
+		this->head = this->head->nextProduct;
 	
 	else {
 		std::cout << "Index out of range. Function cannot be called" << std::endl;
@@ -141,8 +141,8 @@ void ProductList::setToNext()
 
 void ProductList::clearList()
 {
-	if (this->productList != nullptr) {
-		Product *deleter = this->productList;
+	if (this->head != nullptr) {
+		Product *deleter = this->head;
 
 		if (deleter->nextProduct == nullptr)
 			delete deleter;
@@ -150,11 +150,12 @@ void ProductList::clearList()
 		else
 			while (deleter != nullptr) {
 				deleter = deleter->nextProduct;
-				delete this->productList;
-				this->productList = deleter;
+				delete this->head;
+				this->head = deleter;
 			}
 	}
 	this->size = 0;
+	this->head = nullptr;
 }
 
 int ProductList::getSize()
@@ -164,7 +165,7 @@ int ProductList::getSize()
 
 bool ProductList::isNextElementAvailable()
 {
-	if (this->productList->nextProduct == nullptr)
+	if (this->head->nextProduct == nullptr)
 		return false;
 	else
 		return true;
@@ -172,7 +173,7 @@ bool ProductList::isNextElementAvailable()
 
 bool ProductList::containsProduct(const Product* product)
 {
-	Product *temp = this->productList;
+	Product *temp = this->head;
 
 	while (temp != nullptr) {
 		if (temp->productName == product->productName)
@@ -188,7 +189,7 @@ Product * ProductList::getItem(int index)
 	if (index > this->getSize() - 1)
 		std::cout << "Index out of range" << std::endl;
 	else {
-		Product *itemToReturn = this->productList;
+		Product *itemToReturn = this->head;
 		int i = 0;
 		while (i < index)
 		{
@@ -199,6 +200,28 @@ Product * ProductList::getItem(int index)
 		return itemToReturn;
 	}
 }
+Product * ProductList::getItem(std::string productName)
+{	
+	Product *itemToReturn = this->head;
+	Product *product = new Product;
+	product->productName = productName;
+
+	if (this->containsProduct(product)) {
+		delete product;
+		itemToReturn = this->head;
+
+		while (itemToReturn->productName != productName)
+			itemToReturn = itemToReturn->nextProduct;
+
+		return itemToReturn;
+	}
+	else {
+		delete product;
+		std::cout << "Nie znaleziono takiego produktu" << std::endl;
+		return nullptr;
+	}
+}
+
 //TODO: Poprawiæ tê metodê. dziala ale jest brzydka
 Product* ProductList::getProductInfoFromUser()
 {
@@ -232,7 +255,7 @@ Product* ProductList::getProductInfoFromUser()
 
 ProductList & ProductList::operator=(ProductList & productList)
 {
-	this->productList = productList.productList;
+	this->head = productList.head;
 	this->size = productList.size;
 	
 	return *this;
@@ -241,8 +264,8 @@ ProductList & ProductList::operator=(ProductList & productList)
 ProductList & ProductList::operator+=(const ProductList & productList)
 {
 	ProductList temp1, temp2, temp3;
-	Product *productOnListToBeAdded = productList.productList;
-	Product *productOnCurrentWarehouseList = this->productList;
+	Product *productOnListToBeAdded = productList.head;
+	Product *productOnCurrentWarehouseList = this->head;
 
 	while (productOnListToBeAdded != nullptr) {
 
@@ -251,7 +274,7 @@ ProductList & ProductList::operator+=(const ProductList & productList)
 				productOnCurrentWarehouseList = productOnCurrentWarehouseList->nextProduct;
 			
 			productOnCurrentWarehouseList->numberOfItemsInStock += productOnListToBeAdded->numberOfItemsInStock;
-			productOnCurrentWarehouseList = this->productList;
+			productOnCurrentWarehouseList = this->head;
 			productOnListToBeAdded = productOnListToBeAdded->nextProduct;
 		}
 
@@ -261,24 +284,26 @@ ProductList & ProductList::operator+=(const ProductList & productList)
 
 ProductList::~ProductList()
 {
-	if (this->productList != nullptr) {
-		Product *deleter = this->productList;
+	if (this->head != nullptr) {
+		Product *deleter = this->head;
 
 		if (deleter->nextProduct == nullptr)
 			delete deleter;
 
-		else
+		else {
 			while (deleter->nextProduct != nullptr) {
 				deleter = deleter->nextProduct;
-				delete this->productList;
-				this->productList = deleter;
+				delete this->head;
+				this->head = deleter;
 			}
+			delete deleter;
+		}
 	}
 }
 
 ProductList & ProductList::operator=(ProductList && productList)
 {
-	this->productList = std::move(productList.productList);
+	this->head = std::move(productList.head);
 	this->size = std::move(productList.size);
 
 	return *this;

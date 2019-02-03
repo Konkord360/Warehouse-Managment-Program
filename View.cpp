@@ -30,7 +30,8 @@ void CommunicationManagement::viewWarehousemanMenu()
 void CommunicationManagement::viewCustomerMenu()
 {
 	std::cout << "1. Zloz zamowienie" << std::endl;
-	std::cout << "2. Anuluj zamowienie" << std::endl;
+	std::cout << "2. Odbierz zamowienie" << std::endl;
+	std::cout << "3. Anuluj zamowienie" << std::endl;
 	std::cout << "3. Zakoncz" << std::endl;
 	std::cin >> this->userInput;
 
@@ -78,6 +79,18 @@ void CommunicationManagement::displayList(ProductList & productList)
 				<< productList.getItem(i)->productId << "\t \t \t" << productList.getItem(i)->numberOfItemsInStock << "\t \t \t"
 				<< productList.getItem(i)->expirationDate << std::endl;
 		}
+}
+
+void CommunicationManagement::displayOrderedItems(ProductList & productList)
+{
+	if (productList.getSize() == 0)
+		std::cout << "Koszyk jest pusty" << std::endl;
+	else
+		std::cout << "Nazwa produktu: \t Typ produktu: \t ilosc: " << std::endl;
+	for (int i = 0; i < productList.getSize(); i++) {
+		std::cout << i << ". " << productList.getItem(i)->productName << "\t \t \t" << productList.getItem(i)->productType << "\t \t"
+			<< productList.getItem(i)->numberOfItemsInStock << std::endl;
+	}
 }
 
 void CommunicationManagement::getInfoAboutOrder(ProductList & productList)

@@ -20,11 +20,10 @@ public:
 
 class ProductList {
 private:
-	Product *productList;
+	Product *head;
 	int size;
 
 public:
-	void viewProducts();
 	void addProduct();
 	void addProduct(std::string productName);
 	void addProduct(Product* product);
@@ -37,9 +36,10 @@ public:
 	bool isEmpty();//
 	bool containsProduct(const Product* product);
 	Product* getItem(int index);
+	Product* getItem(std::string productName);
 	Product* getProductInfoFromUser();//
-	ProductList() : productList(nullptr), size(0) {};
-	ProductList(const ProductList &productList) : productList(productList.productList), size(productList.size) {};
+	ProductList() : head(nullptr), size(0) {};
+	ProductList(const ProductList &productList) : head(productList.head), size(productList.size) {};
 	~ProductList();
 	ProductList& operator=(ProductList &&productList);
 	ProductList& operator=(ProductList &productList);
@@ -47,22 +47,22 @@ public:
 	//ProductList& operator=(ProductList&& object) = default;
 };
 
-class Shelf {
-private:
-	int numberOfSlotsLeft;
-	int numberOfSlots;
-public:
-	void removeProduct();
-	void addProduct();
-	void checkQuantity();
-};
-
-class Shelfs {
-private:
-	Shelf *shelfs;
-public:
-	static int numberOfShelfs;
-};
+//class Shelf {
+//private:
+//	int numberOfSlotsLeft;
+//	int numberOfSlots;
+//public:
+//	void removeProduct();
+//	void addProduct();
+//	void checkQuantity();
+//};
+//
+//class Shelfs {
+//private:
+//	Shelf *shelfs;
+//public:
+//	static int numberOfShelfs;
+//};
 
 
 

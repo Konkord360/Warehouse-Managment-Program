@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include "WarehouseSide.h"
-
+#include "CustomerSide.h"
 class FileManager {
 private:
 	std::string fileToWorkWith;
@@ -14,7 +14,9 @@ public:
 	void writeNamesOfProductsToFile(ProductList listOfProductsToWriteToFile);
 	void rewriteNamesOfProductsToFile(ProductList listOfProductsToWriteToFile);
 	void write(ProductList& listOfProductsToWriteToFile);
-	void writeOrderToFile();
+	void writeOrderToFile(CustomerOrder& customerOrder);
+	void rewriteOrdersToFile(CustomerOrderList& customerOrderList);
+	void readOrdersFromFile(CustomerOrderList& customerOrderList);
 	void rewrite(ProductList& listOfProductsToWriteToFile);
 	void setFileToWorkWith(std::string fileName);
 	bool checkIfProductIsInOffer(Product& product);
