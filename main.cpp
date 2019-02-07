@@ -5,7 +5,7 @@
 #include "FileManagment.h"
 #include "CustomerSide.h"
 #include "Warehouseman.h"
-
+#include "Generators.h"
 int main() {
 	CommunicationManagement communicationManager;
 	Warehouseman warehouseman;
@@ -14,8 +14,9 @@ int main() {
 	CustomerOrderList customerOrderList;
 	ProductList listOfProductsAvailableInWarehouse;
 	FileManager fileManager;
-	std::string produktTest;
-	char choice;
+	IDGenerator idGenerator;
+	ExpirationDateGenerator dateGen;
+	std::string produktTest, id, date;
 
 	fileManager.setFileToWorkWith("listOfProductsAvailableInWarehouse.txt");
 	fileManager.read(listOfProductsAvailableInWarehouse);
@@ -37,40 +38,33 @@ int main() {
 				break;
 			case reciveDelivery:
 				warehouseman.reciveDelivery();
-				break;
-			case cleanUpInWarehouse:
-				break;
-			case checkExpirationDatesOfProducts:
-				break;
-			case addProduct://wyniesc:)
 				fileManager.setFileToWorkWith("listOfProductsAvailableInWarehouse.txt");
-				listOfProductsAvailableInWarehouse.addProduct();
-				fileManager.write(listOfProductsAvailableInWarehouse);
-				listOfProductsAvailableInWarehouse.removeProduct(0);
+				fileManager.read(listOfProductsAvailableInWarehouse);
 				break;
-			case removeProduct://poprawic i wyniesc
-				listOfProductsAvailableInWarehouse.clearList();
-				fileManager.setFileToWorkWith("listOfProductsAvailableInWarehouse.txt");
-				//if (listOfProductsAvailableInWarehouse.getSize() == 0)
-					fileManager.read(listOfProductsAvailableInWarehouse);
-				listOfProductsAvailableInWarehouse.removeProduct("gruszka");
-				fileManager.rewrite(listOfProductsAvailableInWarehouse);
+			case addProduct:
+				warehouseman.addProduct(listOfProductsAvailableInWarehouse);
+				break;
+			case removeProduct:
+				warehouseman.removeProduct(listOfProductsAvailableInWarehouse);
 				break;
 			case closeWarehousemanEnum:
 				break;
 			default:
 				break;
 			}
+			communicationManager.setUserInput('0');
 			break;
 		case '2': 
 			communicationManager.viewCustomerMenu();
 			switch (communicationManager.getUserInput()) {
 			case makeOrder:
+				customerOrderList.~CustomerOrderList();
 				customer.makeOrder(listOfProductsAvailableInWarehouse, customerOrder);
 				fileManager.writeOrderToFile(customerOrder);
-				customerOrder.getOrderedItems().clearList();
+				customerOrderList.~CustomerOrderList();
 				break;
 			case reciveOrder:
+				customerOrderList.~CustomerOrderList();
 				fileManager.readOrdersFromFile(customerOrderList);
 				customer.reciveOrder(listOfProductsAvailableInWarehouse, customerOrderList);
 				fileManager.setFileToWorkWith("listOfProductsAvailableInWarehouse.txt");
@@ -78,16 +72,17 @@ int main() {
 				fileManager.rewriteOrdersToFile(customerOrderList);
 				break;
 			case cancelOrder:
-				customer.cancelOrder();
+				customerOrderList.~CustomerOrderList();
+				fileManager.readOrdersFromFile(customerOrderList);
+				customer.cancelOrder(customerOrderList);
+				fileManager.rewriteOrdersToFile(customerOrderList);
 				break;
 			case closeCustomerMenu:
 				break;
 			default:
 				break;
 			}
-			
-			break;
-		default:
+			communicationManager.setUserInput('0');
 			break;
 		}
 	}

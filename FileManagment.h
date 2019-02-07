@@ -20,4 +20,6 @@ public:
 	void rewrite(ProductList& listOfProductsToWriteToFile);
 	void setFileToWorkWith(std::string fileName);
 	bool checkIfProductIsInOffer(Product& product);
+	std::string encryptString(std::string textToBeEncrypted);
+	std::string decryptString(std::string textToBeDecrypted);
 };

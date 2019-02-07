@@ -1,10 +1,13 @@
 #include "WarehouseSide.h"
-
+#include "Generators.h"
 
 void ProductList::addProduct()
 {
+	IDGenerator idGenerator;
+	ExpirationDateGenerator dateGenerator;
 	Product* newProduct = getProductInfoFromUser();
 
+	if (!this->containsProduct(newProduct)) {
 		this->size++;
 
 		if (this->head == nullptr)
@@ -19,6 +22,11 @@ void ProductList::addProduct()
 			listHead->nextProduct = newProduct;
 			listHead->nextProduct->nextProduct = nullptr;
 		}
+	}
+	else {
+		std::cout << "Produkt znajduje sie juz w ofercie!" << std::endl;
+		delete newProduct;
+	}
 }
 
 void ProductList::addProduct(std::string productName)
@@ -26,7 +34,6 @@ void ProductList::addProduct(std::string productName)
 	Product *newProduct = new Product;
 	newProduct->productName = productName;
 
-	//Product *newProduct2 = newProduct;
 	this->size++;
 
 	if (this->head == nullptr)
@@ -66,7 +73,6 @@ void ProductList::removeProduct(std::string productName)
 
 	else if (this->head->productName == productName)
 	{
-		//usuwanie produktu z poczatku listy
 		delete head;
 		this->head = nullptr;
 		this->size--;
@@ -76,7 +82,7 @@ void ProductList::removeProduct(std::string productName)
 	{
 		Product *temp = this->head;
 		Product *toBeDeleted = this->head;
-		//znalezienie produktu do usuniecia
+
 		while (temp->nextProduct != nullptr && temp->nextProduct->productName != productName) 
 			temp = temp->nextProduct;
 		
@@ -85,16 +91,14 @@ void ProductList::removeProduct(std::string productName)
 
 		else if (temp->nextProduct->productName == productName) 
 		{	
-			//Usuwanie produktu ze œrodka listy
 			if (temp->nextProduct->nextProduct != nullptr) {
 				toBeDeleted = temp->nextProduct;
 				temp->nextProduct = temp->nextProduct->nextProduct;
 				delete toBeDeleted;
 			}
-			//usuwanie produktu z konca listy
 			else {
 				delete temp->nextProduct;
-				temp->nextProduct == nullptr;
+				temp->nextProduct = nullptr;
 			}
 			this->size--;
 		}
@@ -129,16 +133,6 @@ void ProductList::removeProduct(int index)
 	}
 }
 
-void ProductList::setToNext()
-{
-	if(this->head->nextProduct != nullptr)
-		this->head = this->head->nextProduct;
-	
-	else {
-		std::cout << "Index out of range. Function cannot be called" << std::endl;
-	}
-}
-
 void ProductList::clearList()
 {
 	if (this->head != nullptr) {
@@ -161,14 +155,6 @@ void ProductList::clearList()
 int ProductList::getSize()
 {
 	return this->size;
-}
-
-bool ProductList::isNextElementAvailable()
-{
-	if (this->head->nextProduct == nullptr)
-		return false;
-	else
-		return true;
 }
 
 bool ProductList::containsProduct(const Product* product)
@@ -199,7 +185,9 @@ Product * ProductList::getItem(int index)
 	
 		return itemToReturn;
 	}
+	return nullptr;
 }
+
 Product * ProductList::getItem(std::string productName)
 {	
 	Product *itemToReturn = this->head;
@@ -222,11 +210,14 @@ Product * ProductList::getItem(std::string productName)
 	}
 }
 
-//TODO: Poprawiæ tê metodê. dziala ale jest brzydka
 Product* ProductList::getProductInfoFromUser()
 {
+	IDGenerator idGenerator;
+	ExpirationDateGenerator dateGenerator;
 	Product* newProduct = new Product;
 	char userChoice;
+
+	newProduct->productId = idGenerator.generate();
 
 	std::cout << " Podaje nazwe produktu" << std::endl;
 	std::cin.ignore();
@@ -241,6 +232,7 @@ Product* ProductList::getProductInfoFromUser()
 	{
 	case '1':
 		newProduct->productType = "Food";
+		newProduct->expirationDate = dateGenerator.generate();
 		break;
 	case '2':
 		newProduct->productType = "Object";
@@ -270,14 +262,25 @@ ProductList & ProductList::operator+=(const ProductList & productList)
 	while (productOnListToBeAdded != nullptr) {
 
 		if (this->containsProduct(productOnListToBeAdded)) {
-			while (productOnListToBeAdded->productName != productOnCurrentWarehouseList->productName) 
+			while (productOnListToBeAdded->productName != productOnCurrentWarehouseList->productName)
 				productOnCurrentWarehouseList = productOnCurrentWarehouseList->nextProduct;
-			
+
 			productOnCurrentWarehouseList->numberOfItemsInStock += productOnListToBeAdded->numberOfItemsInStock;
-			productOnCurrentWarehouseList = this->head;
-			productOnListToBeAdded = productOnListToBeAdded->nextProduct;
+			//productOnCurrentWarehouseList = this->head;
+		}
+		else {
+			Product* newProduct = new Product;
+
+			newProduct->expirationDate = productOnListToBeAdded->expirationDate;
+			newProduct->numberOfItemsInStock = productOnListToBeAdded->numberOfItemsInStock;
+			newProduct->productId = productOnListToBeAdded->productId;
+			newProduct->productName = productOnListToBeAdded->productName;
+			newProduct->productType = productOnListToBeAdded->productType;
+
+			this->addProduct(newProduct);
 		}
 
+		productOnListToBeAdded = productOnListToBeAdded->nextProduct;
 	}
 	return *this;
 }
@@ -309,14 +312,6 @@ ProductList & ProductList::operator=(ProductList && productList)
 	return *this;
 }
 
-//ProductList & ProductList::operator=(ProductList && productList)
-//{
-//	this->productList = std::move(productList.productList);
-//
-//	return *this;
-//}
-
-
 Product & Product::operator=(Product && product)
 {
 	this->expirationDate = std::move(product.expirationDate);
@@ -327,10 +322,29 @@ Product & Product::operator=(Product && product)
 	return *this;
 }
 
-void Product::checkIfProductIsAllreadyInOffer()
+std::ifstream & operator>>(std::ifstream& in, Product* product)
 {
-	//FileManager fileManager;
-	//fileManager.setFileToWorkWith("listOfProductsAvailableInWarehouse.txt");
-	////productList = fileManager.read();
-	//productList.getItem(0);
+	in >> product->productName;
+	in >> product->productType;
+	in >> product->productId;
+	in >> product->numberOfItemsInStock;
+	in >> product->expirationDate;
+
+	return in;
+}
+
+std::ofstream & operator<<(std::ofstream & out, Product * product)
+{
+	out << product->productName;
+	out << " ";
+	out << product->productType;
+	out << " ";
+	out << product->productId;
+	out << " ";
+	out << product->numberOfItemsInStock;
+	out << " ";
+	out << product->expirationDate;
+	out << std::endl;
+	
+	return out;
 }

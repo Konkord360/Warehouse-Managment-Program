@@ -11,11 +11,9 @@ enum warehousemanEnum {
 	replenishReserve = '1',
 	checkStockOfProducts = '2',
 	reciveDelivery = '3',
-	cleanUpInWarehouse = '4',
-	checkExpirationDatesOfProducts = '5',
-	addProduct = '6',
-	removeProduct = '7',
-	closeWarehousemanEnum = '8'
+	addProduct = '4',
+	removeProduct = '5',
+	closeWarehousemanEnum = '6'
 };
 
 enum customerMenuEnum {
@@ -29,13 +27,10 @@ class CommunicationManagement {
 	char userInput;
 public:
 	char getUserInput();
+	void setUserInput(char input);
     void viewMainMenu();
 	void viewWarehousemanMenu();
 	void viewCustomerMenu();
-	void handleWarehousemanMenuChoice();
-	void handleCustomerMenuChoice();
-	void viewWarehouseStock();
 	void displayList(ProductList& productList);
 	void displayOrderedItems(ProductList& productList);
-	void getInfoAboutOrder(ProductList& productList);
 };

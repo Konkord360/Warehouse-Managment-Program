@@ -42,7 +42,6 @@ void Customer::makeOrder(ProductList& listOfProductsAvailableInWarehouse, Custom
 {
 	ProductList listOfOrderedItems;
 	CommunicationManagement communicationManager;
-	int nr, ilosc; 
 	char customerChoice = ' ';
 
 	do {
@@ -66,8 +65,23 @@ void Customer::makeOrder(ProductList& listOfProductsAvailableInWarehouse, Custom
 	} while (customerChoice != '3');
 }
 
-void Customer::cancelOrder()
+void Customer::cancelOrder(CustomerOrderList& orderList)
 {
+	std::string name, surname, pesel;
+	std::cout << "Podaj imie:" << std::endl;
+	std::cin >> name;
+	std::cout << "Podaj nazwisko" << std::endl;
+	std::cin >> surname;
+	std::cout << "Podaj pesel" << std::endl;
+	std::cin >> pesel;
+
+	CustomerOrder *orderToBeRecived = orderList.getOrder(pesel);
+	if (orderToBeRecived != nullptr) {
+		delete orderToBeRecived;
+		std::cout << "Zamowienie zostalo anulowane" << std::endl;
+	}
+	else 
+		std::cout << "Nie znaleziona zamowienia na tak¹ osobê" << std::endl;
 }
 
 void Customer::reciveOrder(ProductList& listOfProductsAvailableInWarehouse, CustomerOrderList& orderList)
@@ -86,7 +100,7 @@ void Customer::reciveOrder(ProductList& listOfProductsAvailableInWarehouse, Cust
 			if (listOfProductsAvailableInWarehouse.getItem(orderToBeRecived->getOrderedItems().getItem(i)->productName)->numberOfItemsInStock <
 				orderToBeRecived->getOrderedItems().getItem(i)->numberOfItemsInStock) {
 				std::cout << "Nie mozna zrealizowac zamowienia! Za mala ilosc " << orderToBeRecived->getOrderedItems().getItem(i)->productName <<
-					"w magazynie. Poczekaj na dostawe." << std::endl;
+					" w magazynie. Poczekaj na dostawe." << std::endl;
 				orderList.addOrder(orderToBeRecived);
 				return;
 			}
@@ -96,10 +110,10 @@ void Customer::reciveOrder(ProductList& listOfProductsAvailableInWarehouse, Cust
 			orderToBeRecived->getOrderedItems().getItem(j)->numberOfItemsInStock;
 
 		delete orderToBeRecived;
+		std::cout << "Zamowienie zosta³o zrealizowane" << std::endl;
 	}
 	else
 		std::cout << "Nie znaleziono zamowienia na taka osobe" << std::endl;
-	//wyszukaæ zamówienei w order List -> odj¹c produkty od listOffProductsAvailableInWarehouse -> usun¹æ zamówienie z orderList i nadpisaæ plik(w mainie) :)
 }
 
 
@@ -174,7 +188,6 @@ void CustomerOrderList::addOrder(CustomerOrder* customerOrder)
 		listHead->nextOrder = customerOrder;
 		listHead->nextOrder->nextOrder = nullptr;
 	}
-	//this->size++;
 }
 
 CustomerOrder* CustomerOrderList::getOrder(std::string pesel)
@@ -193,7 +206,7 @@ CustomerOrder* CustomerOrderList::getOrder(std::string pesel)
 
 		else {
 			while (pom->nextOrder != nullptr) {
-				if (pom->nextOrder->getCustomer().getCustomerName() == pesel) {
+				if (pom->nextOrder->getCustomer().getCustomerPesel() == pesel) {
 					orderToReturn = pom->nextOrder;
 					pom->nextOrder = pom->nextOrder->nextOrder;
 					orderToReturn->nextOrder = nullptr;

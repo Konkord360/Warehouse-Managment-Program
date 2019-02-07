@@ -30,16 +30,7 @@ void FileManager::write(ProductList& listOfProductsToWriteToFile)
 	if(listOfProductsToWriteToFile.getSize() != 0)
 		if (fileToWriteTo.is_open()) {
 			for (int i = 0; i < listOfProductsToWriteToFile.getSize(); i++) {
-				fileToWriteTo << listOfProductsToWriteToFile.getItem(i)->productName;
-				fileToWriteTo << " ";						
-				fileToWriteTo << listOfProductsToWriteToFile.getItem(i)->productType;
-				fileToWriteTo << " ";						
-				fileToWriteTo << listOfProductsToWriteToFile.getItem(i)->productId;
-				fileToWriteTo << " ";						
-				fileToWriteTo << listOfProductsToWriteToFile.getItem(i)->numberOfItemsInStock;
-				fileToWriteTo << " ";						
-				fileToWriteTo << listOfProductsToWriteToFile.getItem(i)->expirationDate;
-				fileToWriteTo << std::endl;
+				fileToWriteTo << listOfProductsToWriteToFile.getItem(i);
 			}
 		}
 	fileToWriteTo.close();
@@ -51,8 +42,9 @@ void FileManager::writeOrderToFile(CustomerOrder & customerOrder)
 	std::ofstream fileToWriteTo(this->fileToWorkWith, std::ios::app);
 	if (customerOrder.getOrderedItems().getSize() != 0)
 		if (fileToWriteTo.is_open()) {
-			fileToWriteTo << customerOrder.getCustomer().getCustomerName() << " " << customerOrder.getCustomer().getCustomerSurname() << " "
-				<< customerOrder.getCustomer().getCustomerPesel() << " " << customerOrder.getOrderedItems().getSize() << std::endl;
+			
+			fileToWriteTo << encryptString(customerOrder.getCustomer().getCustomerName()) << " " << encryptString(customerOrder.getCustomer().getCustomerSurname()) << " "
+				<< encryptString(customerOrder.getCustomer().getCustomerPesel()) << " " << customerOrder.getOrderedItems().getSize() << std::endl;
 
 			for (int i = 0; i < customerOrder.getOrderedItems().getSize(); i++) {
 				fileToWriteTo << customerOrder.getOrderedItems().getItem(i)->productName;
@@ -79,8 +71,8 @@ void FileManager::rewriteOrdersToFile(CustomerOrderList& customerOrderList)
 	while (pom != nullptr) {
 
 		if (fileToWriteTo.is_open()) {
-			fileToWriteTo << pom->getCustomer().getCustomerName() << " " << pom->getCustomer().getCustomerSurname() << " "
-				<< pom->getCustomer().getCustomerPesel() << " " << pom->getOrderedItems().getSize() << std::endl;
+			fileToWriteTo << encryptString(pom->getCustomer().getCustomerName()) << " " << encryptString(pom->getCustomer().getCustomerSurname()) << " "
+				<< encryptString(pom->getCustomer().getCustomerPesel()) << " " << pom->getOrderedItems().getSize() << std::endl;
 
 			for (int i = 0; i < pom->getOrderedItems().getSize(); i++) {
 				fileToWriteTo << pom->getOrderedItems().getItem(i)->productName;
@@ -115,10 +107,10 @@ void FileManager::readOrdersFromFile(CustomerOrderList & customerOrderList)
 			fileToReadFrom >> customerSurname;
 			fileToReadFrom >> customerPesel;
 			fileToReadFrom >> numberOfItems;
-
+			customerName = decryptString(customerName);
+			customerSurname = decryptString(customerSurname);
+			customerPesel= decryptString(customerPesel);
 			if (customerName != "") {
-				//ProductList *orderedProductList = new ProductList;
-				//orderedProductList.clearList();
 				for (int i = 0; i < numberOfItems; i++) {
 					Product* orderedProduct = new Product;
 					fileToReadFrom >> orderedProduct->productName;
@@ -149,18 +141,8 @@ void FileManager::rewrite(ProductList& listOfProductsToWriteToFile)
 
 	if (listOfProductsToWriteToFile.getSize() != 0)
 		if (fileToWriteTo.is_open()) {
-			for (int i = 0; i < listOfProductsToWriteToFile.getSize(); i++) {
-				fileToWriteTo << listOfProductsToWriteToFile.getItem(i)->productName;
-				fileToWriteTo << " ";								   
-				fileToWriteTo << listOfProductsToWriteToFile.getItem(i)->productType;
-				fileToWriteTo << " ";								   
-				fileToWriteTo << listOfProductsToWriteToFile.getItem(i)->productId;
-				fileToWriteTo << " ";								   
-				fileToWriteTo << listOfProductsToWriteToFile.getItem(i)->numberOfItemsInStock;
-				fileToWriteTo << " ";								   
-				fileToWriteTo << listOfProductsToWriteToFile.getItem(i)->expirationDate;
-				fileToWriteTo << std::endl;
-			}
+			for (int i = 0; i < listOfProductsToWriteToFile.getSize(); i++) 
+				fileToWriteTo << listOfProductsToWriteToFile.getItem(i);
 		}
 	fileToWriteTo.close();
 }
@@ -168,15 +150,11 @@ void FileManager::rewrite(ProductList& listOfProductsToWriteToFile)
 void FileManager::read(ProductList &productList)
 {
 	std::ifstream fileToReadFrom (this->fileToWorkWith);
-	
+	productList.clearList();
 	if (fileToReadFrom.is_open()) {
 		while (!fileToReadFrom.eof()) {
 			Product *product = new Product;
-			fileToReadFrom >> product->productName;
-			fileToReadFrom >> product->productType;
-			fileToReadFrom >> product->productId;
-			fileToReadFrom >> product->numberOfItemsInStock;
-			fileToReadFrom >> product->expirationDate;
+			fileToReadFrom >> product;
 			if ("NA" != product->productName)
 				productList.addProduct(product);
 			else
@@ -198,4 +176,24 @@ bool FileManager::checkIfProductIsInOffer(Product& product)
 
 
 	return false;
+}
+
+std::string FileManager::encryptString(std::string textToBeCiphered)
+{
+	std::string cipheredString;
+	cipheredString = textToBeCiphered;
+	for (int i = 0; i < cipheredString.length(); i++) {
+		cipheredString[i] += 5;
+	}
+	return cipheredString;
+}
+
+std::string FileManager::decryptString(std::string textToBeDecrypted)
+{
+	std::string decryptedString;
+	decryptedString = textToBeDecrypted;
+	for (int i = 0; i < textToBeDecrypted.length(); i++) {
+		decryptedString[i] -= 5;
+	}
+	return decryptedString;
 }

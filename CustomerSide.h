@@ -18,7 +18,7 @@ public:
 	Customer(std::string customerName, std::string customerSurname, std::string pesel) : 
 		name(customerName), surname(customerSurname), pesel(pesel) {};
 	void makeOrder(ProductList& listOfProductsAvailableInWarehouse, CustomerOrder& customerOrder);
-	void cancelOrder();
+	void cancelOrder(CustomerOrderList& orderList);
 	void reciveOrder(ProductList& listOfProductsAvailableInWarehouse, CustomerOrderList& orderList);
 
 	Customer& operator=(Customer&& customer);
@@ -51,7 +51,6 @@ private:
 public:
 	CustomerOrderList() : head(nullptr) {};
 	void addOrder(CustomerOrder* customerOrder);
-	void removeOrder();
 	CustomerOrder* getOrder(std::string pesel);
 	CustomerOrder* getHead();
 	~CustomerOrderList();
