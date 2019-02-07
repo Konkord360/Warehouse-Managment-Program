@@ -14,13 +14,13 @@ bool FlowControll::runProgram()
 
 		switch (communicationManager.getUserInput())
 		{
-		case '1':
+		case viewWarehousemanMenu:
 			this->handleWarehousemanMenu();
-			communicationManager.setUserInput('0');
+			communicationManager.setUserInput(resetChoice);
 			break;
-		case '2':
+		case viewCustomerMenu:
 			this->handleCustomerMenu();
-			communicationManager.setUserInput('0');
+			communicationManager.setUserInput(resetChoice);
 			break;
 		}
 	}

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "WarehouseSide.h"
 enum mainMenuEnum {
+	resetChoice = '0',
 	viewWarehousemanMenu = '1',
 	viewCustomerMenu = '2',
 	end = '3'
