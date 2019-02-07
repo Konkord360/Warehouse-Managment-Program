@@ -266,7 +266,6 @@ ProductList & ProductList::operator+=(const ProductList & productList)
 				productOnCurrentWarehouseList = productOnCurrentWarehouseList->nextProduct;
 
 			productOnCurrentWarehouseList->numberOfItemsInStock += productOnListToBeAdded->numberOfItemsInStock;
-			//productOnCurrentWarehouseList = this->head;
 		}
 		else {
 			Product* newProduct = new Product;
@@ -281,6 +280,7 @@ ProductList & ProductList::operator+=(const ProductList & productList)
 		}
 
 		productOnListToBeAdded = productOnListToBeAdded->nextProduct;
+		productOnCurrentWarehouseList = this->head;
 	}
 	return *this;
 }
