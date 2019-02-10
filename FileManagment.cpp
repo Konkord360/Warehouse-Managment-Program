@@ -1,29 +1,5 @@
 #include "FileManagment.h"
 
-void FileManager::writeNamesOfProductsToFile(ProductList listOfProductsToWriteToFile)
-{
-	std::ofstream fileToWriteTo (this->fileToWorkWith, std::ios::app);
-	if (fileToWriteTo.is_open()) {
-		for (int i = 0; i < listOfProductsToWriteToFile.getSize(); i++) {
-			fileToWriteTo << listOfProductsToWriteToFile.getItem(i)->productName;
-			fileToWriteTo << std::endl;
-		}
-	}
-	fileToWriteTo.close();
-}
-
-void FileManager::rewriteNamesOfProductsToFile(ProductList listOfProductsToWriteToFile)
-{
-	std::ofstream fileToWriteTo(this->fileToWorkWith);
-	if (fileToWriteTo.is_open()) {
-		for (int i = 0; i < listOfProductsToWriteToFile.getSize(); i++) {
-			fileToWriteTo << listOfProductsToWriteToFile.getItem(i)->productName;
-			fileToWriteTo << std::endl;
-		}
-	}
-	fileToWriteTo.close();
-}
-
 void FileManager::write(ProductList& listOfProductsToWriteToFile)
 {
 	std::ofstream fileToWriteTo(this->fileToWorkWith, std::ios::app);
@@ -167,15 +143,6 @@ void FileManager::read(ProductList &productList)
 void FileManager::setFileToWorkWith(std::string fileName)
 {
 	this->fileToWorkWith = fileName;
-}
-
-bool FileManager::checkIfProductIsInOffer(Product& product)
-{
-	ProductList productList;
-	this->read(productList);
-
-
-	return false;
 }
 
 std::string FileManager::encryptString(std::string textToBeCiphered)
